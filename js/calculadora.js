@@ -10,10 +10,12 @@ for (let i = 0; i < botones.length; i++){
 function add_value(value){
 
     let resultado = document.getElementById("txtResultado");
-    
+
     if (value=="="){
         try {
-            resultado.value = eval(resultado.value);
+            if (resultado.value != ""){
+                resultado.value = eval(resultado.value);
+            }            
         } catch (e){
             console.log(e);
         }
@@ -21,9 +23,9 @@ function add_value(value){
     } else if (value=="clean"){
         resultado.value = "";
     } else {
-        resultado.value += value;
+        if (!isNaN(value) || value == '+' || value == '-' || value == '*'|| value == '/' ){
+            resultado.value += value;
+        }
     }
-    
-    
  
 }
