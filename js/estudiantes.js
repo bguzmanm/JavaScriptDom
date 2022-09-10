@@ -13,9 +13,21 @@ let nombre = document.querySelector("#nombre");
 let apellido = document.querySelector("#apellido");
 let edad = document.querySelector("#edad");
 
-function addStudent(e){
+
+/* 
+C -> Create
+R -> Read
+U -> Update
+D -> Delete
+
+*/
+
+// crea y actualiza un estudiante.
+// es decir, hace el CREATE y el UPDATE
+function createStudent(e){
     let students = read("students");
 
+    // hace el CREATE
     if (idStudent.value == 0 || idStudent.value == null){
         const student = {
             id: (students.length + 1),
@@ -24,12 +36,31 @@ function addStudent(e){
             age : edad.value,
         }
         students.push(student);
+
+    // hace el UPDATE
+    } else {
+        // const student = students[idStudent.id-1];
+        let pos = students.findIndex(student => student.id == idStudent.value);
+        if (pos >= 0){
+            students[pos].name = nombre.value;
+            students[pos].lastName = apellido.value;
+            students[pos].age = edad.value;
+        }
     }
+
     save("students", students);
-    show();
+    clearForm();
+    readAll();
 }
 
-function show(){
+function clearForm(){
+    idStudent.value = 0;
+    nombre.value = '';
+    apellido.value = '';
+    edad.value = null;
+}
+
+function readAll(){
 
     let tbody = document.querySelector("#estudiantes");
     tbody.innerHTML = "";
@@ -42,18 +73,34 @@ function show(){
             <td>${element.lastName}</td>
             <td>${element.age}</td>
             <td>
-                <button type="button" id="edit" class="btn btn-outline-warning">edit</button> 
-                <button type="button" id="del" class="btn btn-outline-danger">del</button> 
+                <button type="button" id="edit${element.id}" class="btn btn-outline-warning">edit</button> 
+                <button type="button" id="del${element.id}" class="btn btn-outline-danger">del</button> 
             </td>
         </tr>
         `;
     });
-
 }
 
-show();
+function readOne(id){
+    let students = read("students");
+    let student = students[id - 1];
+    
+    idStudent.value = student.id;
+    nombre.value = student.name;
+    apellido.value = student.lastName;
+    edad.value = student.age;
+}
+
+readAll();
 
 let btnAdd = document.querySelector("#btnAgregar");
 btnAdd.addEventListener("click", (e) => {
-    addStudent(e);
+    createStudent(e);
+});
+
+let editList = document.querySelectorAll(".btn-outline-warning");
+editList.forEach(element => {
+    element.addEventListener('click', (e) => {
+        readOne(element.id.match(/(\d+)/)[0]);
+    })
 })
