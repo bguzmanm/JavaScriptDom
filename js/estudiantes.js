@@ -91,6 +91,13 @@ function readOne(id){
     edad.value = student.age;
 }
 
+function delStudent(id){
+    let students = read("students");
+    let filtrado = students.filter(student => student.id != id);
+    save("students", filtrado);
+    readAll();
+}
+
 readAll();
 
 let btnAdd = document.querySelector("#btnAgregar");
@@ -103,4 +110,12 @@ editList.forEach(element => {
     element.addEventListener('click', (e) => {
         readOne(element.id.match(/(\d+)/)[0]);
     })
-})
+});
+
+let delList = document.querySelectorAll(".btn-outline-danger");
+delList.forEach(element => {
+    element.addEventListener('click', (e) => {
+        delStudent(element.id.match(/(\d+)/)[0]);
+    })
+});
+
